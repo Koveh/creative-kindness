@@ -21,6 +21,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ru">
+      <head>
+        <link rel="icon" href="/Vector.svg" type="image/svg+xml" />
+      </head>
       <body
         className={`antialiased font-['Suisse_Intl',sans-serif]`}
       >
