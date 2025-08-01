@@ -42,11 +42,17 @@ export default function AdminPage() {
     expiresAt: null
   })
   const [isLoading, setIsLoading] = useState(false)
-  const [activeView, setActiveView] = useState<'users' | 'articles' | 'add-article'>('users')
+  const [activeView, setActiveView] = useState<'users' | 'articles' | 'add-article' | 'query'>('users')
   const [users, setUsers] = useState<User[]>([])
   const [articles, setArticles] = useState<Article[]>([])
   const [isDataLoading, setIsDataLoading] = useState(false)
   const [isHydrated, setIsHydrated] = useState(false)
+  
+  // Database query state
+  const [queryText, setQueryText] = useState('')
+  const [queryResults, setQueryResults] = useState<any[]>([])
+  const [queryColumns, setQueryColumns] = useState<string[]>([])
+  const [queryError, setQueryError] = useState('')
   
   // Add article form state
   const [newArticle, setNewArticle] = useState({
@@ -82,12 +88,54 @@ export default function AdminPage() {
   const fetchArticles = async () => {
     setIsDataLoading(true)
     try {
-      const response = await fetch('/api/articles')
-      const data = await response.json()
-      setArticles(data)
+      const response = await fetch('/api/articles/admin')
+      if (response.ok) {
+        const data = await response.json()
+        setArticles(data)
+      } else {
+        alert('Не удалось загрузить статьи')
+      }
     } catch (error) {
       alert('Не удалось загрузить статьи')
     }
+    setIsDataLoading(false)
+  }
+
+  const executeQuery = async () => {
+    if (!queryText.trim()) {
+      setQueryError('Введите SQL запрос')
+      return
+    }
+
+    setIsDataLoading(true)
+    setQueryError('')
+    setQueryResults([])
+    setQueryColumns([])
+
+    try {
+      const response = await fetch('/api/query', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ query: queryText })
+      })
+      
+      const data = await response.json()
+      
+      if (response.ok) {
+        if (data.results && data.results.length > 0) {
+          setQueryResults(data.results)
+          setQueryColumns(Object.keys(data.results[0]))
+        } else {
+          setQueryResults([])
+          setQueryColumns([])
+        }
+      } else {
+        setQueryError(data.error || 'Ошибка выполнения запроса')
+      }
+    } catch (error) {
+      setQueryError('Не удалось выполнить запрос')
+    }
+    
     setIsDataLoading(false)
   }
 
@@ -184,91 +232,179 @@ export default function AdminPage() {
           <CardContent>
             <p>Добро пожаловать, {authState.user?.name}!</p>
             <p>Роль: {authState.user?.role}</p>
-            <div>
+            <div className="space-x-2 space-y-2">
               <Button onClick={() => { setActiveView('users'); fetchUsers(); }}>Пользователи</Button>
               <Button onClick={() => { setActiveView('articles'); fetchArticles(); }}>Статьи</Button>
               <Button onClick={() => setActiveView('add-article')}>Добавить статью</Button>
-              <Button onClick={() => authManager.logout()}>Выйти</Button>
+              <Button onClick={() => setActiveView('query')}>SQL Запросы</Button>
+              <Button onClick={() => authManager.logout()} variant="outline">Выйти</Button>
             </div>
           </CardContent>
         </Card>
 
         {isDataLoading && <p>Загрузка...</p>}
 
-        {activeView === 'users' && users.length > 0 && (
-          <Card>
+        {activeView === 'users' && (
+          <Card className="mt-4">
             <CardHeader>
-              <CardTitle>Пользователи</CardTitle>
+              <CardTitle>Пользователи ({users.length})</CardTitle>
             </CardHeader>
             <CardContent>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>ID</TableHead>
-                    <TableHead>Имя</TableHead>
-                    <TableHead>Email</TableHead>
-                    <TableHead>Телефон</TableHead>
-                    <TableHead>Telegram</TableHead>
-                    <TableHead>Роль</TableHead>
-                    <TableHead>Создан</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {users.map((user) => (
-                    <TableRow key={user.id}>
-                      <TableCell>{user.id}</TableCell>
-                      <TableCell>{user.name}</TableCell>
-                      <TableCell>{user.email}</TableCell>
-                      <TableCell>{user.phone || '-'}</TableCell>
-                      <TableCell>{user.telegram || '-'}</TableCell>
-                      <TableCell>{user.role}</TableCell>
-                      <TableCell>{user.created_at}</TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+              {users.length > 0 ? (
+                <div className="overflow-x-auto">
+                  <Table className="min-w-full">
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead className="min-w-[60px]">ID</TableHead>
+                        <TableHead className="min-w-[150px]">Имя</TableHead>
+                        <TableHead className="min-w-[200px]">Email</TableHead>
+                        <TableHead className="min-w-[120px]">Телефон</TableHead>
+                        <TableHead className="min-w-[200px]">Описание</TableHead>
+                        <TableHead className="min-w-[120px]">Telegram</TableHead>
+                        <TableHead className="min-w-[100px]">Роль</TableHead>
+                        <TableHead className="min-w-[150px]">Создан</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {users.map((user) => (
+                        <TableRow key={user.id}>
+                          <TableCell>{user.id}</TableCell>
+                          <TableCell>{user.name}</TableCell>
+                          <TableCell className="max-w-[200px] truncate">{user.email}</TableCell>
+                          <TableCell>{user.phone || '-'}</TableCell>
+                          <TableCell className="max-w-[200px] truncate">{user.description || '-'}</TableCell>
+                          <TableCell>{user.telegram || '-'}</TableCell>
+                          <TableCell>{user.role}</TableCell>
+                          <TableCell>{new Date(user.created_at).toLocaleDateString('ru-RU')}</TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+              ) : (
+                <p>Нет пользователей для отображения</p>
+              )}
             </CardContent>
           </Card>
         )}
 
-        {activeView === 'articles' && articles.length > 0 && (
-          <Card>
+        {activeView === 'articles' && (
+          <Card className="mt-4">
             <CardHeader>
-              <CardTitle>Статьи</CardTitle>
+              <CardTitle>Статьи ({articles.length})</CardTitle>
             </CardHeader>
             <CardContent>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>ID</TableHead>
-                    <TableHead>Заголовок</TableHead>
-                    <TableHead>Автор</TableHead>
-                    <TableHead>Компания</TableHead>
-                    <TableHead>Статус</TableHead>
-                    <TableHead>Просмотры</TableHead>
-                    <TableHead>Создатель</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {articles.map((article) => (
-                    <TableRow key={article.id}>
-                      <TableCell>{article.id}</TableCell>
-                      <TableCell>{article.title}</TableCell>
-                      <TableCell>{article.writer || '-'}</TableCell>
-                      <TableCell>{article.company || '-'}</TableCell>
-                      <TableCell>{article.status}</TableCell>
-                      <TableCell>{article.views}</TableCell>
-                      <TableCell>{article.author_email}</TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+              {articles.length > 0 ? (
+                <div className="overflow-x-auto">
+                  <Table className="min-w-full">
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead className="min-w-[60px]">ID</TableHead>
+                        <TableHead className="min-w-[250px]">Заголовок</TableHead>
+                        <TableHead className="min-w-[150px]">Автор</TableHead>
+                        <TableHead className="min-w-[150px]">Компания</TableHead>
+                        <TableHead className="min-w-[100px]">Статус</TableHead>
+                        <TableHead className="min-w-[100px]">Просмотры</TableHead>
+                        <TableHead className="min-w-[200px]">Создатель</TableHead>
+                        <TableHead className="min-w-[200px]">Описание</TableHead>
+                        <TableHead className="min-w-[200px]">Изображение</TableHead>
+                        <TableHead className="min-w-[150px]">Дата публикации</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {articles.map((article) => (
+                        <TableRow key={article.id}>
+                          <TableCell>{article.id}</TableCell>
+                          <TableCell className="max-w-[250px] truncate">{article.title}</TableCell>
+                          <TableCell>{article.writer || '-'}</TableCell>
+                          <TableCell>{article.company || '-'}</TableCell>
+                          <TableCell>{article.status}</TableCell>
+                          <TableCell>{article.views}</TableCell>
+                          <TableCell className="max-w-[200px] truncate">{article.author_email}</TableCell>
+                          <TableCell className="max-w-[200px] truncate">{article.description || '-'}</TableCell>
+                          <TableCell className="max-w-[200px] truncate">{article.title_image || '-'}</TableCell>
+                          <TableCell>{article.publish_date ? new Date(article.publish_date).toLocaleDateString('ru-RU') : '-'}</TableCell>
+                        </TableRow>
+                      ))}
+                    </TableBody>
+                  </Table>
+                </div>
+              ) : (
+                <p>Нет статей для отображения</p>
+              )}
+            </CardContent>
+          </Card>
+        )}
+
+        {activeView === 'query' && (
+          <Card className="mt-4">
+            <CardHeader>
+              <CardTitle>SQL Запросы к базе данных</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div>
+                  <Label htmlFor="query">SQL Запрос</Label>
+                  <textarea
+                    id="query"
+                    value={queryText}
+                    onChange={(e) => setQueryText(e.target.value)}
+                    className="w-full p-2 border rounded min-h-[100px] font-mono text-sm"
+                    placeholder="SELECT * FROM users LIMIT 10;"
+                  />
+                </div>
+                <Button onClick={executeQuery} disabled={isDataLoading}>
+                  {isDataLoading ? 'Выполнение...' : 'Выполнить запрос'}
+                </Button>
+                
+                {queryError && (
+                  <div className="p-3 bg-red-100 border border-red-300 rounded text-red-700">
+                    <strong>Ошибка:</strong> {queryError}
+                  </div>
+                )}
+                
+                {queryResults.length > 0 && (
+                  <div>
+                    <h3 className="text-lg font-medium mb-2">Результаты ({queryResults.length} строк):</h3>
+                    <div className="overflow-x-auto border rounded">
+                      <Table className="min-w-full">
+                        <TableHeader>
+                          <TableRow>
+                            {queryColumns.map((column) => (
+                              <TableHead key={column} className="min-w-[150px] bg-gray-50">
+                                {column}
+                              </TableHead>
+                            ))}
+                          </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                          {queryResults.map((row, index) => (
+                            <TableRow key={index}>
+                              {queryColumns.map((column) => (
+                                <TableCell key={column} className="max-w-[200px] truncate">
+                                  {row[column] !== null && row[column] !== undefined 
+                                    ? String(row[column]) 
+                                    : 'NULL'}
+                                </TableCell>
+                              ))}
+                            </TableRow>
+                          ))}
+                        </TableBody>
+                      </Table>
+                    </div>
+                  </div>
+                )}
+                
+                {queryResults.length === 0 && !queryError && !isDataLoading && queryText && (
+                  <p>Запрос выполнен успешно, но результатов нет.</p>
+                )}
+              </div>
             </CardContent>
           </Card>
         )}
 
         {activeView === 'add-article' && (
-          <Card>
+          <Card className="mt-4">
             <CardHeader>
               <CardTitle>Добавить новую статью</CardTitle>
             </CardHeader>
