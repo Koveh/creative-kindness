@@ -5,7 +5,7 @@ export default function Home() {
   return (
     <div className="w-full">
       {/* Hero Section with Large Image */}
-      <section className="w-full mb-12">
+      <section className="w-full mb-6 md:mb-12">
         <Image
           src="/preview_main_page.jpg"
           alt="Креативное добро - главная страница"
@@ -19,7 +19,7 @@ export default function Home() {
       {/* Content Section */}
       <section className="mb-8">
         {/* Title */}
-        <h1 className="text-lg md:text-xl lg:text-2xl font-medium mb-3 text-primary leading-tight">
+        <h1 className="text-xl md:text-xl lg:text-2xl font-medium mb-3 text-primary leading-tight">
           От безразличия к вовлечению: <br /> как студия «ONY» превратила фонд «ЦМТ» в узнаваемый бренд помощи
         </h1>
 
@@ -31,7 +31,7 @@ export default function Home() {
 
       {/* Navigation Links */}
       <section className="mb-6">
-        <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-16">
+        <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-8 md:gap-16">
           <Link 
             href="/journal" 
             className="group flex items-center gap-2 text-lg font-medium text-primary hover:text-secondary transition-colors"

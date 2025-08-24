@@ -18,7 +18,7 @@ async function getArticleBySlug(slug: string): Promise<Article | null> {
   try {
     // Use the current request's host for server-side fetching
     const protocol = process.env.NODE_ENV === 'production' ? 'https' : 'http'
-    const host = process.env.VERCEL_URL || process.env.NEXT_PUBLIC_VERCEL_URL || 'localhost:3006'
+    const host = process.env.URL || 'localhost:3004'
     const baseUrl = `${protocol}://${host}`
     
     const response = await fetch(`${baseUrl}/api/articles/slug/${slug}`, {
@@ -51,7 +51,8 @@ export default async function ArticlePage({ params }: Props) {
   return (
     <div className="w-full">
       {/* Full-width title image */}
-      <div className="relative w-full h-64 md:h-80 lg:h-96 mb-12 -mx-4 md:-mx-6 -mt-4 md:-mt-6">
+      <div className="relative w-full h-64 md:h-80 lg:h-96 mb-4 sm:mb-6 md:mb-8">
+      {/* <div className="relative w-full h-64 md:h-80 lg:h-96 mb-12 -mx-4 md:-mx-6 -mt-4 md:-mt-6"> */}
         <Image
           src={article.title_image}
           alt={article.title}

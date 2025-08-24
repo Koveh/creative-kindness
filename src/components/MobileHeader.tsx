@@ -78,10 +78,96 @@ export default function MobileHeader() {
 
   return (
     <>
-      {/* Mobile Header Bar */}
+      {/* NEW MOBILE HEADER - Bottom Up */}
+      <div className="md:hidden">
+        {/* Bottom Header Bar */}
+        <header className="fixed bottom-0 left-0 right-0 z-50 bg-white shadow-lg">
+          <div className="flex items-center justify-between p-4">
+            {/* Logo */}
+            <div className="flex items-center gap-3">
+              <Image
+                src="/Vector.svg"
+                alt="Креативное добро"
+                width={24}
+                height={24}
+              />
+              <span className="text-sm font-medium text-primary">креативное добро</span>
+            </div>
+
+            {/* Menu Toggle Button */}
+            <button
+              onClick={() => setIsOpen(!isOpen)}
+              className="p-2 rounded-md hover:bg-gray-100 transition-colors"
+              aria-label="Toggle menu"
+            >
+              <div className="w-6 h-6 flex flex-col justify-center items-center gap-1">
+                <div className={`w-5 h-0.5 bg-primary transition-all ${isOpen ? 'rotate-45 translate-y-1.5' : ''}`}></div>
+                <div className={`w-5 h-0.5 bg-primary transition-all ${isOpen ? 'opacity-0' : ''}`}></div>
+                <div className={`w-5 h-0.5 bg-primary transition-all ${isOpen ? '-rotate-45 -translate-y-1.5' : ''}`}></div>
+              </div>
+            </button>
+          </div>
+        </header>
+
+        {/* Bottom Navigation Drawer */}
+        <div className={`
+          fixed bottom-0 left-0 w-full bg-white z-40 transform transition-transform duration-300 ease-in-out rounded-t-2xl shadow-2xl
+          ${isOpen ? 'translate-y-0' : 'translate-y-full'}
+        `} style={{ maxHeight: '300px' }}>
+          <div className="px-6 py-4 max-h-[300px] overflow-y-auto">
+            {/* Drag Handle */}
+            <div className="flex justify-center mb-4">
+              <div className="w-12 h-1 bg-gray-300 rounded-full"></div>
+            </div>
+            
+            {/* Main Navigation */}
+            <nav className="space-y-4">
+              {mainNavItems.map((item) => (
+                <div key={item.name}>
+                  <Link
+                    href={item.href}
+                    onClick={() => setIsOpen(false)}
+                    className={`block text-base py-2 ${
+                      activeMainItem === item.name 
+                        ? 'text-primary font-medium' 
+                        : 'text-secondary'
+                    }`}
+                  >
+                    {item.name}
+                  </Link>
+                  
+                  {/* Submenu */}
+                  {item.submenu && activeMainItem === item.name && (
+                    <div className="mt-2 ml-4 space-y-1">
+                      {item.submenu.map((subItem) => (
+                        <Link
+                          key={subItem.name}
+                          href={subItem.href}
+                          onClick={() => setIsOpen(false)}
+                          className={`block text-sm py-1 ${
+                            pathname === subItem.href 
+                              ? 'text-primary' 
+                              : 'text-secondary'
+                          }`}
+                        >
+                          {subItem.name}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </nav>
+          </div>
+        </div>
+
+
+      </div>
+
+      {/* COMMENTED OUT OLD MOBILE HEADER */}
+      {/*
       <header className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-border">
         <div className="flex items-center justify-between p-4">
-          {/* Logo */}
           <div className="flex items-center gap-3">
             <Image
               src="/Vector.svg"
@@ -92,7 +178,6 @@ export default function MobileHeader() {
             <span className="text-lg font-medium text-primary">креативное добро</span>
           </div>
 
-          {/* Hamburger Menu Button */}
           <button
             onClick={() => setIsOpen(!isOpen)}
             className="p-2 rounded-md hover:bg-gray-100 transition-colors"
@@ -107,13 +192,11 @@ export default function MobileHeader() {
         </div>
       </header>
 
-      {/* Mobile Navigation Drawer */}
       <div className={`
         fixed top-0 left-0 w-full h-full bg-white z-40 transform transition-transform duration-300 ease-in-out
         ${isOpen ? 'translate-x-0' : '-translate-x-full'}
       `}>
         <div className="pt-20 px-6 pb-6 h-full overflow-y-auto">
-          {/* Main Navigation */}
           <nav className="space-y-6">
             {mainNavItems.map((item) => (
               <div key={item.name}>
@@ -129,7 +212,6 @@ export default function MobileHeader() {
                   {item.name}
                 </Link>
                 
-                {/* Submenu */}
                 {item.submenu && activeMainItem === item.name && (
                   <div className="mt-3 ml-4 space-y-2">
                     {item.submenu.map((subItem) => (
@@ -154,13 +236,13 @@ export default function MobileHeader() {
         </div>
       </div>
 
-      {/* Backdrop */}
       {isOpen && (
         <div 
           className="fixed inset-0 bg-black bg-opacity-50 z-30"
           onClick={() => setIsOpen(false)}
         />
       )}
+      */}
     </>
   )
 } 

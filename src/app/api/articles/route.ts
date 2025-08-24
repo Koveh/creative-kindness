@@ -11,7 +11,7 @@ export async function GET(request: NextRequest) {
     const util = require('util')
     const execPromise = util.promisify(exec)
 
-    const query = `PGPASSWORD=${process.env.POSTGRES_PASSWORD} psql -h ${process.env.POSTGRES_HOST} -U ${process.env.POSTGRES_USER} -d ${process.env.POSTGRES_DB} -t -c "SELECT id, title, author_email, writer, company, status, views, publish_date, description, title_image, link FROM articles WHERE status = 'published' ORDER BY created_at DESC LIMIT ${limit} OFFSET ${offset};"`
+    const query = `PGPASSWORD=${process.env.POSTGRES_PASSWORD} psql -h ${process.env.POSTGRES_HOST} -U ${process.env.POSTGRES_USER} -d ${process.env.POSTGRES_DB} -t -c "SELECT id, title, content, author_email, writer, company, status, views, publish_date, description, title_image, link FROM articles WHERE status = 'published' ORDER BY created_at DESC LIMIT ${limit} OFFSET ${offset};"`
 
     const countQuery = `PGPASSWORD=${process.env.POSTGRES_PASSWORD} psql -h ${process.env.POSTGRES_HOST} -U ${process.env.POSTGRES_USER} -d ${process.env.POSTGRES_DB} -t -c "SELECT COUNT(*) FROM articles WHERE status = 'published';"`
 
@@ -22,20 +22,33 @@ export async function GET(request: NextRequest) {
     
     const articles = stdout.trim().split('\n').filter((line: string) => line.trim()).map((line: string) => {
       const parts = line.split('|').map((part: string) => part.trim())
-      return {
-        id: parseInt(parts[0]),
-        title: parts[1],
-        author_email: parts[2],
-        writer: parts[3] || null,
-        company: parts[4] || null,
-        status: parts[5],
-        views: parseInt(parts[6]) || 0,
-        publish_date: parts[7] || null,
-        description: parts[8] || null,
-        title_image: parts[9] || null,
-        link: parts[10] || null
+      
+      // Handle cases where some fields might be missing or malformed
+      if (parts.length < 12) {
+        console.warn('Incomplete article data:', line)
+        return null
       }
-    })
+      
+      // Extract slug from link field
+      const link = parts[11] === '' || parts[11] === 'NULL' ? null : parts[11]
+      const slug = link ? link.replace('/journal/', '') : null
+      
+      return {
+        id: parseInt(parts[0]) || 0,
+        title: parts[1] || '',
+        content: parts[2] === '' || parts[2] === 'NULL' ? null : parts[2],
+        author_email: parts[3] || '',
+        writer: parts[4] === '' || parts[4] === 'NULL' ? null : parts[4],
+        company: parts[5] === '' || parts[5] === 'NULL' ? null : parts[5],
+        status: parts[6] || 'draft',
+        views: parseInt(parts[7]) || 0,
+        publish_date: parts[8] === '' || parts[8] === 'NULL' ? null : parts[8],
+        description: parts[9] === '' || parts[9] === 'NULL' ? null : parts[9],
+        title_image: parts[10] === '' || parts[10] === 'NULL' ? null : parts[10],
+        link: link,
+        slug: slug
+      }
+    }).filter((article: any) => article !== null)
 
     const totalCount = parseInt(countStdout.trim())
     const totalPages = Math.ceil(totalCount / limit)

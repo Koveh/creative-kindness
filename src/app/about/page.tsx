@@ -5,7 +5,8 @@ export default function AboutPage() {
   return (
     <div className="w-full">
       {/* Full-width image */}
-      <div className="relative w-full h-64 md:h-80 lg:h-96 mb-12 -mx-4 md:-mx-6 -mt-4 md:-mt-6">
+      <div className="relative w-full h-64 md:h-80 lg:h-96 xl:h-120 mb-12">
+      {/* <div className="relative w-full h-64 md:h-80 lg:h-96 mb-12 -mx-4 md:-mx-6 -mt-4 md:-mt-6"> */}
         <Image
           src="http://65.109.88.77:9000/creative-kindness/about.png"
           alt="О платформе Креативное добро"

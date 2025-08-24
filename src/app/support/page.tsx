@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Image from 'next/image'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent } from '@/components/ui/card'
@@ -18,116 +19,125 @@ export default function SupportPage() {
   }
 
   return (
-    <div className="min-h-screen">
-      {/* Hero Image Section */}
-      <div className="relative w-full h-96 md:h-[500px] overflow-hidden">
-        <Skeleton className="w-full h-full" />
-        {/* TODO: Replace with actual image */}
-        {/* <Image
-          src="/support-hero.jpg"
-          alt="Люди идут по полю"
+    <div className="w-full">
+      {/* Full-width hero image */}
+      <div className="relative w-full h-64 md:h-80 lg:h-96 xl:h-120 mb-4 md:mb-8">
+        <Image
+          src="http://65.109.88.77:9000/creative-kindness/support_us.webp"
+          alt="Поддержка Креативного добра"
           fill
           className="object-cover"
-        /> */}
+          priority
+        />
       </div>
 
       {/* Content Section */}
-      <div className="max-w-4xl mx-auto px-6 py-12">
+      <div className="max-w-4xl">
         {/* Heading */}
-        <div className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-bold mb-6">
+        <div className="text-left mb-8">
+          <h1 className="text-xl md:text-4xl font-bold mb-2">
             Мы верим в силу сотрудничества!
           </h1>
-          <p className="text-lg text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+          <p className="text-base text-secondary max-w-3xl leading-relaxed">
             Именно благодаря регулярным взносам мы поддерживаем работу сайта, развиваем команду и финансируем программы фондов. Работая вместе мы сможем значительно ускорить создание полезной социальной платформы.
           </p>
         </div>
 
         {/* Support Form */}
-        <Card className="max-w-2xl mx-auto">
-          <CardContent className="p-8">
-            <form onSubmit={handleSubmit} className="space-y-6">
-              {/* Name Field */}
-              <div className="space-y-2">
-                <label htmlFor="name" className="text-sm font-medium">
-                  Имя
-                </label>
+        <div className="text-left mb-12">
+          <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Name Field */}
+            <div className="flex items-center gap-4">
+              <label htmlFor="name" className="text-sm font-medium whitespace-nowrap">
+                Имя →
+              </label>
+              <div className="flex-1 relative">
                 <Input
                   id="name"
                   type="text"
                   placeholder="Добро Креативное"
+                  className="w-full border-none bg-white text-[#B5B5B5] placeholder:text-[#B5B5B5] focus:outline-none focus:ring-0 pb-2"
                   disabled={isLoading}
                 />
+                <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#B5B5B5]"></div>
               </div>
+            </div>
 
-              {/* Email Field */}
-              <div className="space-y-2">
-                <label htmlFor="email" className="text-sm font-medium">
-                  Почта
-                </label>
+            {/* Email Field */}
+            <div className="flex items-center gap-4">
+              <label htmlFor="email" className="text-sm font-medium whitespace-nowrap">
+                Почта →
+              </label>
+              <div className="flex-1 relative">
                 <Input
                   id="email"
                   type="email"
                   placeholder="hello@societycreate.ru"
+                  className="w-full border-none bg-white text-[#B5B5B5] placeholder:text-[#B5B5B5] focus:outline-none focus:ring-0 pb-2"
                   disabled={isLoading}
                 />
+                <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-[#B5B5B5]"></div>
               </div>
+            </div>
 
-              {/* Amount Field */}
-              <div className="space-y-2">
-                <label htmlFor="amount" className="text-sm font-medium">
-                  Сумма
-                </label>
+            {/* Amount Field */}
+            <div className="flex items-center gap-8">
+              <label htmlFor="amount" className="text-sm font-medium whitespace-nowrap">
+                Сумма →
+              </label>
+              <div className="flex-1 relative">
                 <Input
                   id="amount"
                   type="text"
                   defaultValue="500₽"
-                  className="text-center font-medium"
+                  className="w-full border border-[#B5B5B5] bg-transparent text-center font-medium"
                   disabled={isLoading}
                 />
               </div>
+            </div>
 
-              {/* Frequency Selection */}
-              <div className="space-y-2">
-                <label className="text-sm font-medium">
-                  Тип
-                </label>
-                <div className="flex gap-2">
-                  <Button
-                    type="button"
-                    variant={frequency === 'monthly' ? 'default' : 'outline'}
-                    onClick={() => setFrequency('monthly')}
-                    disabled={isLoading}
-                    className="flex-1"
-                  >
-                    Каждый месяц
-                  </Button>
-                  <Button
-                    type="button"
-                    variant={frequency === 'weekly' ? 'default' : 'outline'}
-                    onClick={() => setFrequency('weekly')}
-                    disabled={isLoading}
-                    className="flex-1"
-                  >
-                    Раз в неделю
-                  </Button>
-                  <Button
-                    type="button"
-                    variant={frequency === 'once' ? 'default' : 'outline'}
-                    onClick={() => setFrequency('once')}
-                    disabled={isLoading}
-                    className="flex-1"
-                  >
-                    Разово
-                  </Button>
-                </div>
+            {/* Frequency Selection */}
+            <div className="flex items-center gap-4">
+              <label className="text-sm font-medium whitespace-nowrap">
+                Тип →
+              </label>
+              <div className="flex gap-2 flex-1">
+                <Button
+                  type="button"
+                  variant={frequency === 'monthly' ? 'default' : 'outline'}
+                  onClick={() => setFrequency('monthly')}
+                  disabled={isLoading}
+                  className="flex-1"
+                >
+                  Каждый месяц
+                </Button>
+                <Button
+                  type="button"
+                  variant={frequency === 'weekly' ? 'default' : 'outline'}
+                  onClick={() => setFrequency('weekly')}
+                  disabled={isLoading}
+                  className="flex-1"
+                >
+                  Каждую неделю
+                </Button>
+                <Button
+                  type="button"
+                  variant={frequency === 'once' ? 'default' : 'outline'}
+                  onClick={() => setFrequency('once')}
+                  disabled={isLoading}
+                  className="flex-1"
+                >
+                  Разово
+                </Button>
               </div>
+            </div>
 
-              {/* Submit Button */}
+            {/* Submit Button */}
+            <div className="flex justify-left pt-4">
               <Button
                 type="submit"
                 disabled={isLoading}
-                className="w-full h-12 text-lg font-medium"
+                className="w-full h-8 text-lg font-medium bg-black hover:bg-primary/90 text-white text-left"
               >
                 {isLoading ? (
                   <div className="flex items-center gap-2">
@@ -138,17 +148,17 @@ export default function SupportPage() {
                   'Помочь'
                 )}
               </Button>
+            </div>
 
-              {/* Disclaimer */}
-              <p className="text-xs text-muted-foreground text-center leading-relaxed">
-                Нажимая на кнопку «Помочь», вы соглашаетесь с условиями оферты, политики в отношении обработки и защиты персональных данных и даёте согласие на обработку персональных данных.
-              </p>
-            </form>
-          </CardContent>
-        </Card>
+            {/* Disclaimer */}
+            <p className="text-base text-[#B5B5B5] text-left">
+              Нажимая на кнопку «Помочь», вы соглашаетесь с условиями оферты, политики в отношении обработки и защиты персональных данных и даёте согласие на обработку персональных данных.
+            </p>
+          </form>
+        </div>
 
         {/* Social Media Links */}
-        <div className="flex justify-center gap-8 mt-12">
+        <div className="flex justify-between">
           <a href="#" className="flex items-center gap-2 text-sm hover:opacity-70 transition-opacity">
             telegram →
           </a>

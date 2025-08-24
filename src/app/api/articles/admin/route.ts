@@ -6,25 +6,20 @@ export async function GET() {
     const util = require('util')
     const execPromise = util.promisify(exec)
 
-    const query = `PGPASSWORD=${process.env.POSTGRES_PASSWORD} psql -h ${process.env.POSTGRES_HOST} -U ${process.env.POSTGRES_USER} -d ${process.env.POSTGRES_DB} -t -c "SELECT id, title, author_email, writer, company, status, views, publish_date, description, title_image, link FROM articles ORDER BY created_at DESC;"`
+    const query = `PGPASSWORD=${process.env.POSTGRES_PASSWORD} psql -h ${process.env.POSTGRES_HOST} -U ${process.env.POSTGRES_USER} -d ${process.env.POSTGRES_DB} -c "SELECT * FROM articles ORDER BY created_at DESC;" --csv`
 
     const { stdout } = await execPromise(query)
     
-    const articles = stdout.trim().split('\n').filter((line: string) => line.trim()).map((line: string) => {
-      const parts = line.split('|').map((part: string) => part.trim())
-      return {
-        id: parseInt(parts[0]),
-        title: parts[1],
-        author_email: parts[2],
-        writer: parts[3] || null,
-        company: parts[4] || null,
-        status: parts[5],
-        views: parseInt(parts[6]) || 0,
-        publish_date: parts[7] || null,
-        description: parts[8] || null,
-        title_image: parts[9] || null,
-        link: parts[10] || null
-      }
+    const lines = stdout.trim().split('\n')
+    const headers = lines[0].split(',')
+    
+    const articles = lines.slice(1).map((line: string) => {
+      const values = line.split(',')
+      const article: any = {}
+      headers.forEach((header: string, index: number) => {
+        article[header] = values[index] || null
+      })
+      return article
     })
 
     return NextResponse.json(articles)
