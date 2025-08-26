@@ -1,4 +1,5 @@
 import Image from 'next/image'
+import Link from 'next/link'
 
 const creators = [
   {
@@ -46,34 +47,39 @@ const creators = [
 ]
 
 export default function CreatorsPage() {
+  const slugify = (text: string) =>
+    text
+      .toLowerCase()
+      .replace(/\s+/g, '-')
+      .replace(/[^a-zа-я0-9-]/g, '')
+      .replace(/-+/g, '-')
+      .replace(/^-|-$/g, '')
+
   return (
     <div className="w-full">
-      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-[25px] md:gap-[50px]">
         {creators.map((creator) => (
           <div key={creator.id} className="group">
-            <div className="relative w-full overflow-hidden rounded-none mb-6" style={{ aspectRatio: '391/466' }}>
-              <Image
-                src={creator.image}
-                alt={creator.name}
-                fill
-                className="object-cover"
-              />
-            </div>
-            
-            <div className="space-y-3">
-              <div>
-                <h3 className="text-xl font-medium text-primary mb-1">
-                  {creator.name}
-                </h3>
-                <p className="text-secondary text-sm uppercase tracking-wide">
-                  {creator.role}
-                </p>
+            <Link href={`/creators/${slugify(creator.name)}`} className="block">
+              <div className="relative w-full overflow-hidden rounded-none" style={{ aspectRatio: '391/466' }}>
+                <Image
+                  src={creator.image}
+                  alt={creator.name}
+                  fill
+                  className="object-cover"
+                />
+                {/* Overlay: visible on mobile, on hover on larger screens */}
+                <div className="absolute inset-x-0 bottom-0 p-3 md:p-4 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-200 bg-gradient-to-t from-black/60 to-transparent">
+                  <div className="flex items-center gap-2 text-white text-[12px] md:text-[20px]">
+                    <span className="truncate">{creator.name}</span>
+                    <span>→</span>
+                  </div>
+                  <div className="text-[#B5B5B5] text-[12px] md:text-[20px] leading-snug">
+                    {creator.description}
+                  </div>
+                </div>
               </div>
-              
-              <p className="text-secondary leading-relaxed text-sm">
-                {creator.description}
-              </p>
-            </div>
+            </Link>
           </div>
         ))}
       </div>

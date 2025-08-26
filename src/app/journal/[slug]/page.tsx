@@ -51,7 +51,7 @@ export default async function ArticlePage({ params }: Props) {
   return (
     <div className="w-full">
       {/* Full-width title image */}
-      <div className="relative w-full h-64 md:h-80 lg:h-96 mb-4 sm:mb-6 md:mb-8">
+      <div className="relative w-full h-64 md:h-80 lg:h-96 mb-[50px]">
       {/* <div className="relative w-full h-64 md:h-80 lg:h-96 mb-12 -mx-4 md:-mx-6 -mt-4 md:-mt-6"> */}
         <Image
           src={article.title_image}
@@ -68,11 +68,11 @@ export default async function ArticlePage({ params }: Props) {
       <div className="max-w-2xl mx-auto">
         {/* Article header */}
         <header className="mb-8">
-          <h1 className="text-2xl md:text-2xl lg:text-4xl font-medium text-primary mb-4 leading-tight">
+          <h1 className="text-[40px] md:text-[40px] lg:text-[40px] font-medium text-primary mb-4 leading-tight">
             {article.title}
           </h1>
           
-          <p className="text-base lg:text-lg text-secondary leading-relaxed mb-4">
+          <p className="text-[24px] md:text-[24px] lg:text-[24px] text-secondary leading-relaxed mb-4">
             {article.description}
           </p>
           
@@ -98,25 +98,25 @@ export default async function ArticlePage({ params }: Props) {
           <ReactMarkdown
             components={{
               h2: ({ children }) => (
-                <h2 className="text-2xl font-medium text-primary mt-12 mb-2">{children}</h2>
+                <h2 className="text-[32px] font-medium text-primary mt-12 mb-2">{children}</h2>
               ),
               h3: ({ children }) => (
                 <h3 className="text-xl font-medium text-primary mt-8 mb-2">{children}</h3>
               ),
               p: ({ children }) => (
-                <p className="text-base text-primary font-normal mb-4 leading-relaxed">{children}</p>
+                <p className="text-[24px] text-primary font-normal mb-4 leading-relaxed">{children}</p>
               ),
               ul: ({ children }) => (
-                <ul className="text-base text-primary font-normal mb-4 pl-6 list-disc">{children}</ul>
+                <ul className="text-[24px] text-primary font-normal mb-4 pl-6 list-disc">{children}</ul>
               ),
               li: ({ children }) => (
-                <li className="text-base text-primary font-normal mb-1">{children}</li>
+                <li className="text-[24px] text-primary font-normal mb-1">{children}</li>
               ),
               a: ({ children, href }) => (
-                <a href={href} className="text-base text-secondary font-normal hover:text-primary transition-colors">{children}</a>
+                <a href={href} className="text-[24px] text-secondary font-normal hover:text-primary transition-colors">{children}</a>
               ),
               strong: ({ children }) => (
-                <strong className="text-base text-primary font-medium">{children}</strong>
+                <strong className="text-[24px] text-primary font-medium">{children}</strong>
               )
             }}
           >

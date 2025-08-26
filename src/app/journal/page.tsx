@@ -112,26 +112,26 @@ export default function JournalPage() {
 
   return (
     <div className="w-full">
-      <div className="space-y-16">
+      <div className="space-y-8 md:space-y-12 lg:space-y-16">
         {articles.map((article, index) => (
           <article key={`article-${article.id}-${index}`} className="group">
             <Link href={article.link || '#'} className="block">
-              <div className="flex flex-col lg:flex-row gap-8 lg:gap-12">
+              <div className="flex flex-col lg:flex-row gap-[9px] lg:gap-12">
                 {/* Article Content - Left Side (1/3) */}
-                <div className="lg:w-1/3 space-y-4">
+                <div className="lg:w-1/3 space-y-3 lg:space-y-4">
                   
                   {/* Title */}
-                  <h2 className="text-xl md:text-2xl font-medium text-primary group-hover:text-secondary transition-colors leading-tight">
+                  <h2 className="text-xl md:text-2xl lg:text-[32px] font-medium text-primary group-hover:text-secondary transition-colors leading-tight">
                     {article.title}
                   </h2>
                   
                   {/* Excerpt */}
-                  <p className="text-secondary leading-relaxed">
+                  <p className="text-secondary leading-relaxed lg:text-[20px]">
                     {article.description}
                   </p>
                   
                   {/* Read More Link */}
-                  <div className="flex items-center gap-2 text-primary group-hover:text-secondary transition-colors">
+                  <div className="flex items-center gap-2 text-primary group-hover:text-secondary transition-colors lg:text-[20px]">
                     <span className="font-medium">читать</span>
                     <span className="group-hover:translate-x-1 transition-transform">→</span>
                   </div>

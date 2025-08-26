@@ -220,23 +220,24 @@ export default function Sidebar() {
     <aside className="h-screen flex sticky top-0">  {/*explanations: aside - container for the sidebar, h-screen - full height of the screen, flex - flexbox, sticky - sticky position, top-0 - stick to the top of the screen*/}
       {/* Grid 1: Main Navigation */}
       <div className="flex flex-col justify-center pl-0 p-4"> {/* flexbox, flex column, center the content, p-4 - padding 4 units*/}
-        <nav className="flex flex-col items-start gap-2">
+        <nav className="flex flex-col items-start gap-[10px]">
           {mainNavItems.map((item) => (
             <Link
               key={item.name}
               href={item.href}
-              className={`${
+              className={`relative block pl-[103px] ${
                 activeMainItem === item.name 
-                  ? 'text-2xl font-medium p-2 flex items-center gap-3' 
-                  : 'text-base'
+                  ? 'text-[41px] my-[10px]'
+                  : 'text-[24px]'
               }`}
             >
               {activeMainItem === item.name && (
                 <Image
                   src="/Vector.svg"
                   alt="Креативное добро"
-                  width={64}
-                  height={64}
+                  width={93}
+                  height={88}
+                  className="absolute left-0 top-1/2 -translate-y-1/2"
                 />
               )}
               {item.name === 'креативное добро' ? (
@@ -254,18 +255,18 @@ export default function Sidebar() {
 
       {/* Grid 2: Sub Navigation */}
       <div className="flex flex-col justify-center p-4">
-        <nav className="flex flex-col items-start gap-2">
+        <nav className="flex flex-col items-start gap-2 text-[20px]">
           {(activeSubItems || []).map((subItem, index) => (
             <div key={`${subItem.name}-${index}`} className="max-w-xs">
               <Link
                 href={subItem.href}
-                className={`text-base block ${
+                className={`block ${
                   pathname === subItem.href 
-                    ? 'text-primary text-base' 
-                    : 'text-secondary text-base'
+                    ? 'text-primary' 
+                    : 'text-secondary'
                 }`}
               >
-                <div className="font-medium leading-tight mb-1">
+                <div className="font-normal leading-tight mb-1">
                   {truncateWithFade(subItem.name, 2, 3)}
                 </div>
                 {subItem.description && (

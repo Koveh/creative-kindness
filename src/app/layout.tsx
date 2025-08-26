@@ -131,14 +131,18 @@ ym(103665879, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLa
             {/* Main Content */}
             <main className="
               flex-1
+              ml-[25px]
               md:ml-0
               p-4
               md:p-6
-              pt-20
               md:pt-6
-              mt-[25px]
+              pb-20
+              mb-[25px]
+              md:mb-0
+              md:mt-[25px]
               mr-[25px]
               lg:mt-[50px]
+              lg:mb-0
               lg:mr-[50px]
             ">
               {children}

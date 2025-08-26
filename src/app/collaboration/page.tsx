@@ -41,17 +41,17 @@ export default function CollaborationPage() {
                 />
               </div>
               
-              <h3 className="text-xl font-bold text-gray-800 mb-2 text-left">
+              <h3 className="text-[32px] font-normal text-gray-800 mb-[10px] text-left">
                 {item.title}
               </h3>
               
-              <p className="text-gray-600 leading-relaxed text-sm mb-4 text-left text-secondary">
+              <p className="text-gray-600 leading-relaxed text-[20px] mb-4 text-left text-secondary">
                 {item.description}
               </p>
               
               <a 
                 href={item.link}
-                className="text-gray-800 font-medium hover:opacity-70 transition-opacity text-left"
+                className="text-gray-800 font-medium hover:opacity-70 transition-opacity text-left text-[20px]"
               >
                 Заполнить анкету →
               </a>
