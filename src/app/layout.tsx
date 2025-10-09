@@ -1,7 +1,5 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
-import { Theme } from "@radix-ui/themes";
-import "@radix-ui/themes/styles.css";
 import Sidebar from "@/components/Sidebar";
 import MobileHeader from "@/components/MobileHeader";
 import Script from "next/script";
@@ -116,7 +114,6 @@ ym(103665879, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLa
             <img src="https://mc.yandex.ru/watch/103665879" style={{ position: "absolute", left: "-9999px" }} alt="" />
           </div>
         </noscript>
-        <Theme accentColor="pink" panelBackground="solid" radius="none">
           {/* Mobile Header - only visible on small screens */}
           <div className="md:hidden">
             <MobileHeader />
@@ -148,7 +145,6 @@ ym(103665879, 'init', {ssr:true, webvisor:true, clickmap:true, ecommerce:"dataLa
               {children}
             </main>
           </div>
-        </Theme>
       </body>
     </html>
   );

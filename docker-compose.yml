@@ -1,14 +1,27 @@
 version: '3.8'
 
 services:
-  app:
+  creative-kindness:
     build: .
-    ports:
-      - "3005:3000"
-    network_mode: "bridge"
-    extra_hosts:
-      - "host.docker.internal:host-gateway"
+    network_mode: host
     environment:
       - NODE_ENV=production
-    env_file:
-      - .env
+      - PORT=3000
+      - URL=localhost:3000
+      - NEXT_PUBLIC_BASE_URL=https://societycreate.ru
+      - NEXT_PUBLIC_SITE_URL=https://societycreate.ru
+      - POSTGRES_HOST=localhost
+      - POSTGRES_PORT=5432
+      - POSTGRES_DB=creative_kindness
+      - POSTGRES_USER=koveh
+      - POSTGRES_PASSWORD=KovehShuba2025
+      - MINIO_ENDPOINT=65.109.88.77
+      - MINIO_PORT=9000
+      - MINIO_ACCESS_KEY=koveh
+      - MINIO_SECRET_KEY=Kodex8910838853
+      - MINIO_BUCKET=creative-kindness
+      - MINIO_USE_SSL=false
+      - NEXT_PUBLIC_MINIO_URL=http://65.109.88.77:9000
+      - NEXT_PUBLIC_YM_ID=12345678
+    restart: unless-stopped
+    container_name: creative-kindness

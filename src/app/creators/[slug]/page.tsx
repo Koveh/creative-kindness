@@ -1,74 +1,43 @@
+export const dynamic = 'force-dynamic'
 import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
 interface Creator {
+  id: number
   name: string
   role: string
   image: string
   description: string
   link?: string
+  slug: string
+  category: string
 }
 
-const creators: Creator[] = [
-  {
-    name: 'Федор Шубочкин',
-    role: 'Креативное Добро',
-    image: 'http://65.109.88.77:9000/creative-kindness/Fedor_Shubochkin.jpg',
-    description:
-      'Писатель, редактор, креативный директор. Работает с маркетингом и креативными проектами.',
-    link: '#',
-  },
-  {
-    name: 'Даниил Ковех',
-    role: 'Студия Koveh.com',
-    image: 'http://65.109.88.77:9000/creative-kindness/Daniil_Kovekh.jpeg',
-    description:
-      'Разработчик, пишет информативные статьи для интересующихся айти, финансами и строительством.',
-    link: '#',
-  },
-  {
-    name: 'Анна Лебедева',
-    role: 'Студия Лебедева',
-    image: 'http://65.109.88.77:9000/creative-kindness/person_2.jpg',
-    description: 'Дизайнер, создает визуальные решения для социальных проектов и НКО.',
-    link: '#',
-  },
-  {
-    name: 'Михаил Соколов',
-    role: 'Bureau.ru',
-    image: 'http://65.109.88.77:9000/creative-kindness/person_3.jpg',
-    description: 'Дизайнер, создает визуальные решения для социальных проектов и НКО.',
-    link: '#',
-  },
-  {
-    name: 'Елена Васильева',
-    role: 'Студия Reklama',
-    image: 'http://65.109.88.77:9000/creative-kindness/person_4.jpg',
-    description:
-      'Писатель, редактор, креативный директор. Работает с маркетингом и креативными проектами.',
-    link: '#',
-  },
-  {
-    name: 'Александр Новиков',
-    role: 'Студия Reklama',
-    image: 'http://65.109.88.77:9000/creative-kindness/person_5.jpg',
-    description: 'Дизайнер, создает визуальные решения для социальных проектов и НКО.',
-    link: '#',
-  },
-]
+async function getCreator(slug: string): Promise<Creator | null> {
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3009'}/api/creators/${slug}`, {
+      cache: 'no-store'
+    })
+    
+    if (!response.ok) {
+      return null
+    }
+    
+    const data = await response.json()
+    return data.creator
+  } catch (error) {
+    console.error('Error fetching creator:', error)
+    return null
+  }
+}
 
-const slugify = (text: string) =>
-  text
-    .toLowerCase()
-    .replace(/\s+/g, '-')
-    .replace(/[^a-zа-я0-9-]/g, '')
-    .replace(/-+/g, '-')
-    .replace(/^-|-$/g, '')
-
-export default function CreatorSlugPage({ params }: { params: { slug: string } }) {
-  const creator = creators.find((c) => slugify(c.name) === params.slug)
-  if (!creator) notFound()
+export default async function CreatorSlugPage({ params }: { params: { slug: string } }) {
+  const creator = await getCreator(params.slug)
+  
+  if (!creator) {
+    notFound()
+  }
 
   return (
     <div className="w-full">

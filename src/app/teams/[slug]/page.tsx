@@ -1,75 +1,42 @@
+export const dynamic = 'force-dynamic'
 import Image from 'next/image'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
 interface Team {
+  id: number
   name: string
   category: string
   image: string
   description: string
   link?: string
+  slug: string
 }
 
-const teams: Team[] = [
-  {
-    name: 'Креативная студия «ONY»',
-    category: 'Дизайн-студия',
-    image: 'http://65.109.88.77:9000/creative-kindness/person_6.jpg',
-    description:
-      'Специализируется на создании визуальной идентичности для социальных проектов и благотворительных организаций.',
-    link: '#',
-  },
-  {
-    name: 'Фонд «Центр медицинских технологий»',
-    category: 'Благотворительный фонд',
-    image: 'http://65.109.88.77:9000/creative-kindness/person_2.jpg',
-    description:
-      'Помогает людям с редкими заболеваниями получить доступ к современному лечению и медицинским технологиям.',
-    link: '#',
-  },
-  {
-    name: 'Студия социальной рекламы',
-    category: 'Рекламное агентство',
-    image: 'http://65.109.88.77:9000/creative-kindness/person_3.jpg',
-    description: 'Создает эффективные рекламные кампании для привлечения внимания к социальным проблемам.',
-    link: '#',
-  },
-  {
-    name: 'Экологическая инициатива «Зеленый город»',
-    category: 'Экологическая организация',
-    image: 'http://65.109.88.77:9000/creative-kindness/person_4.jpg',
-    description: 'Занимается озеленением городских пространств и экологическим просвещением населения.',
-    link: '#',
-  },
-  {
-    name: 'Центр помощи детям «Надежда»',
-    category: 'Детский фонд',
-    image: 'http://65.109.88.77:9000/creative-kindness/person_5.jpg',
-    description:
-      'Оказывает комплексную поддержку детям из неблагополучных семей и детям-сиротам.',
-    link: '#',
-  },
-  {
-    name: 'IT-волонтеры «Цифровое добро»',
-    category: 'IT-сообщество',
-    image: 'http://65.109.88.77:9000/creative-kindness/Daniil_Kovekh.jpeg',
-    description:
-      'Разрабатывает цифровые решения для НКО и помогает автоматизировать процессы в благотворительности.',
-    link: '#',
-  },
-]
+async function getTeam(slug: string): Promise<Team | null> {
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3009'}/api/teams/${slug}`, {
+      cache: 'no-store'
+    })
+    
+    if (!response.ok) {
+      return null
+    }
+    
+    const data = await response.json()
+    return data.team
+  } catch (error) {
+    console.error('Error fetching team:', error)
+    return null
+  }
+}
 
-const slugify = (text: string) =>
-  text
-    .toLowerCase()
-    .replace(/\s+/g, '-')
-    .replace(/[^a-zа-я0-9-]/g, '')
-    .replace(/-+/g, '-')
-    .replace(/^-|-$/g, '')
-
-export default function TeamSlugPage({ params }: { params: { slug: string } }) {
-  const team = teams.find((t) => slugify(t.name) === params.slug)
-  if (!team) notFound()
+export default async function TeamSlugPage({ params }: { params: { slug: string } }) {
+  const team = await getTeam(params.slug)
+  
+  if (!team) {
+    notFound()
+  }
 
   return (
     <div className="w-full">

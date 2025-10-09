@@ -43,13 +43,13 @@ export async function POST(request: Request) {
     } catch (error) {
       const firstLine = lines[0]
       const parts = firstLine.split('|').map((part: string) => part.trim())
-      columns = parts.map((_, index) => `column_${index + 1}`)
+      columns = parts.map((_: string, index: number) => `column_${index + 1}`)
     }
 
     if (columns.length === 0) {
       const firstLine = lines[0]
       const parts = firstLine.split('|').map((part: string) => part.trim())
-      columns = parts.map((_, index) => `column_${index + 1}`)
+      columns = parts.map((_: string, index: number) => `column_${index + 1}`)
     }
 
     const results = lines.map((line: string) => {

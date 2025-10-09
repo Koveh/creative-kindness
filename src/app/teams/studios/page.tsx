@@ -1,29 +1,63 @@
-import { TeamPhotoSkeleton } from '@/components/ImageSkeleton'
+export const dynamic = 'force-dynamic'
+import Image from 'next/image'
+import Link from 'next/link'
 
-export default function StudiosPage() {
+interface Team {
+  id: number
+  name: string
+  category: string
+  image: string
+  description: string
+  link?: string
+  slug: string
+}
+
+async function getTeamsByCategory(category: string): Promise<Team[]> {
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3009'}/api/teams/category/${category}`, {
+      cache: 'no-store'
+    })
+    
+    if (!response.ok) {
+      return []
+    }
+    
+    const data = await response.json()
+    return data.teams || []
+  } catch (error) {
+    console.error('Error fetching teams by category:', error)
+    return []
+  }
+}
+
+export default async function StudiosPage() {
+  const teams = await getTeamsByCategory('studios')
+
   return (
-    <div className="p-6">
-      <div className="flex items-center gap-2 mb-6 text-sm">
-        <span className="text-gray-500">Команды</span>
-        <svg className="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-        </svg>
-        <span className="font-medium">Студии</span>
-      </div>
-      
-      <h1 className="text-3xl font-medium mb-8">Студии</h1>
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {Array.from({ length: 9 }).map((_, i) => (
-          <div key={i} className="border rounded-lg p-4">
-            <TeamPhotoSkeleton />
-            <div className="h-5 bg-gray-200 rounded w-2/3 mb-2"></div>
-            <div className="h-4 bg-gray-200 rounded w-full mb-2"></div>
-            <div className="h-4 bg-gray-200 rounded w-4/5 mb-4"></div>
-            <div className="flex gap-2">
-              <div className="h-6 bg-gray-200 rounded w-16"></div>
-              <div className="h-6 bg-gray-200 rounded w-20"></div>
-            </div>
+    <div className="w-full">
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-[25px] md:gap-[50px]">
+        {teams.map((team) => (
+          <div key={team.id} className="group">
+            <Link href={`/teams/${team.slug}`} className="block">
+              <div className="relative w-full overflow-hidden rounded-none" style={{ aspectRatio: '391/466' }}>
+                <Image
+                  src={team.image}
+                  alt={team.name}
+                  fill
+                  className="object-cover"
+                />
+                {/* Overlay: visible on mobile, on hover on larger screens */}
+                <div className="absolute inset-x-0 bottom-0 p-3 md:p-4 opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-200 bg-gradient-to-t from-black/60 to-transparent">
+                  <div className="flex items-center gap-2 text-white text-[12px] md:text-[20px]">
+                    <span className="truncate">{team.name}</span>
+                    <span>→</span>
+                  </div>
+                  <div className="text-[#B5B5B5] text-[12px] md:text-[20px] leading-snug">
+                    {team.description}
+                  </div>
+                </div>
+              </div>
+            </Link>
           </div>
         ))}
       </div>

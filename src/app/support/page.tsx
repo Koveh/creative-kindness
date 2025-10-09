@@ -23,7 +23,7 @@ export default function SupportPage() {
       {/* Full-width hero image */}
       <div className="relative w-full h-64 md:h-80 lg:h-96 xl:h-120 mb-4 md:mb-8">
         <Image
-          src="http://65.109.88.77:9000/creative-kindness/support_us.webp"
+          src="/support_us.webp"
           alt="Поддержка Креативного добра"
           fill
           className="object-cover"
@@ -91,10 +91,10 @@ export default function SupportPage() {
             </div>
 
             {/* Frequency Selection */}
-            <label className="text-[20px] font-medium whitespace-nowrap md:col-span-1">
+            <label className="text-[20px] font-medium md:whitespace-nowrap md:col-span-1">
               Тип →
             </label>
-            <div className="flex gap-2 md:col-span-3">
+            <div className="flex flex-col md:flex-row gap-2 md:col-span-3">
               <Button
                 type="button"
                 variant={frequency === 'monthly' ? 'default' : 'outline'}

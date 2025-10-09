@@ -86,7 +86,7 @@ export default function MobileHeader() {
       {/* NEW MOBILE HEADER - Bottom Up */}
       <div className="md:hidden">
         {/* Bottom Header Bar */}
-        <header className="fixed bottom-0 left-0 right-0 z-50 bg-white shadow-lg">
+        <header className="fixed bottom-0 left-0 right-0 z-50 bg-white">
           <div className="flex items-center justify-between p-3">
             {/* Logo (hide when menu is open) */}
             {!isOpen && (

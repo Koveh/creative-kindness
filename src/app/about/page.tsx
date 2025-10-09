@@ -4,9 +4,8 @@ import Link from 'next/link'
 export default function AboutPage() {
   return (
     <div className="w-full">
-      {/* Full-width image */}
-      <div className="relative w-full h-64 md:h-80 lg:h-96 xl:h-120 mb-12">
-      {/* <div className="relative w-full h-64 md:h-80 lg:h-96 mb-12 -mx-4 md:-mx-6 -mt-4 md:-mt-6"> */}
+      {/* Full-size image with 1464:689 aspect ratio */}
+      <div className="relative w-full aspect-[1464/689] max-h-screen mb-12">
         <Image
           src="http://65.109.88.77:9000/creative-kindness/about.png"
           alt="О платформе Креативное добро"
@@ -22,11 +21,11 @@ export default function AboutPage() {
           {/* About section */}
           <div className="md:col-span-3 lg:col-span-2 xl:col-span-3">
             <section>
-              <h1 className="text-3xl md:text-4xl font-medium text-primary mb-6">
+              <h1 className="text-[32px] font-medium text-primary mb-6">
                 Креативное добро — медиа-платформа нового поколения
               </h1>
               
-              <div className="space-y-4 text-base leading-relaxed">
+              <div className="space-y-4 text-[20px] leading-relaxed">
                 <p className="text-secondary">
                   Мы объединяем благотворительные фонды и креаторов для создания социально значимого контента, который меняет отношение общества к благотворительности. Превращаем социальную ответственность в инструмент профессионального развития и общественного воздействия.
                 </p>
@@ -41,56 +40,56 @@ export default function AboutPage() {
           {/* Contacts section */}
           <div className="md:col-span-1 lg:col-span-1 xl:col-span-1">
             <section>
-              <h2 className="text-2xl font-medium text-primary mb-6">
+              <h2 className="text-[32px] font-medium text-primary mb-4">
                 Контакты
               </h2>
               
-              <div className="space-y-3">
+              <div className="space-y-2">
                 <Link 
                   href="https://t.me/creativekindness" 
-                  className="block text-secondary hover:text-primary transition-colors"
+                  className="block text-secondary hover:text-primary transition-colors text-[20px]"
                 >
                   telegram →
                 </Link>
                 
                 <Link 
                   href="https://vk.com/creativekindness" 
-                  className="block text-secondary hover:text-primary transition-colors"
+                  className="block text-secondary hover:text-primary transition-colors text-[20px]"
                 >
                   вконтакте →
                 </Link>
                 
                 <Link 
                   href="https://youtube.com/@creativekindness" 
-                  className="block text-secondary hover:text-primary transition-colors"
+                  className="block text-secondary hover:text-primary transition-colors text-[20px]"
                 >
                   youtube →
                 </Link>
                 
                 <Link 
                   href="https://instagram.com/creativekindness" 
-                  className="block text-secondary hover:text-primary transition-colors"
+                  className="block text-secondary hover:text-primary transition-colors text-[20px]"
                 >
                   instagram →
                 </Link>
                 
                 <Link 
                   href="tel:+79158991215" 
-                  className="block text-secondary hover:text-primary transition-colors"
+                  className="block text-secondary hover:text-primary transition-colors text-[20px]"
                 >
                   +7 (915) 899-12-15 →
                 </Link>
                 
                 <Link 
                   href="mailto:societycreate@yandex.ru" 
-                  className="block text-secondary hover:text-primary transition-colors"
+                  className="block text-secondary hover:text-primary transition-colors text-[20px]"
                 >
                   societycreate@yandex.ru →
                 </Link>
                 
                 <Link 
                   href="https://koveh.com" 
-                  className="block text-secondary hover:text-primary transition-colors"
+                  className="block text-secondary hover:text-primary transition-colors text-[20px]"
                 >
                   разработка сайта → koveh.com
                 </Link>

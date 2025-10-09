@@ -1,7 +1,6 @@
-FROM node:latest
+FROM node:18-alpine
 
-# Install PostgreSQL client
-RUN apt-get update && apt-get install -y postgresql-client && rm -rf /var/lib/apt/lists/*
+RUN apk add --no-cache postgresql-client
 
 WORKDIR /app
 
@@ -14,5 +13,8 @@ COPY . .
 RUN npm run build
 
 EXPOSE 3000
+
+ENV NODE_ENV=production
+ENV PORT=3000
 
 CMD ["npm", "start"]
